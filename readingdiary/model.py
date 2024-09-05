@@ -18,32 +18,57 @@ class Book:
     BAD: int = 1
     UNRATED: int = -1
 
-    def __init__(self, isbn:str, title:str, author:str, pages:int):
-        self.isbn:str = isbn
-        self.title:str = title
-        self.author:str = author
-        self.pages:int = pages
-        self.rating:int = Book.UNRATED
+    def __init__(self, isbn: str, title: str, author: str, pages: int):
+        self.isbn: str = isbn
+        self.title: str = title
+        self.author: str = author
+        self.pages: int = pages
+        self.rating: int = Book.UNRATED
         self.notes: list[Note] = []
-    def add_note(self, text:str, page:int, date: datetime) -> bool:
+
+    def add_note(self, text: str, page: int, date: datetime) -> bool:
         if page > self.pages:
             return False
         else:
-            Note(text, page, date)
+            new = Note(text, page, date)
+            self.notes.append(new) #correccion - agregado
             return True
 
-    def set_rating(self, rating:int) -> bool:
-        if rating == Book.EXCELLENT or Book.GOOD or Book.BAD:
+    def set_rating(self, rating: int) -> bool:
+        #if rating == Book.EXCELLENT or Book.GOOD or Book.BAD:
+        if rating not in (Book.EXCELLENT, Book.GOOD, Book.BAD): #correccion
             return False
         else:
             self.rating = rating
             return True
 
-    def get_notes_of_page(self, page:int) -> list[Note]:
-        pass
+    def get_notes_of_page(self, page: int) -> list[Note]:
+        #agregado - compleatado por hacer pass
+        return [note for note in self.notes if note.page == page]
 
     def page_with_most_notes(self) -> int:
-        pass
+        # agregado - compleatado por hacer pass
+        #forma: 1
+        pages = [note.page for note in self.notes]
+        lista = []
+        if pages == []:
+            return -1
+
+        else:
+            notes=  {}
+            for page in pages:
+                if page not in notes:
+                    notes[page] = 1
+                else:
+                    notes[page] += 1
+            page = -1
+            moste_count = 0
+            for key in notes:
+                if notes[key] > moste_count:
+                    moste_count = notes[key]
+                    page = key
+            return page
+            #return max(set(pages), key=pages.count)
 
     def __str__(self) -> str:
         if self.rating == 3:
@@ -55,21 +80,31 @@ class Book:
         elif self.rating == -1:
             self.rating = "unrated"
         return f"ISBN: {self.isbn} Title: {self.title} Author: {self.author} Pages: {self.pages} Rating: {self.rating}"
+
+
 class ReadingDiary:
     def __init__(self):
         self.books: dict[str, Book] = {}
-    def add_book(self, isbn:str, title:str, author:str, pages:int)->bool:
+
+    def add_book(self, isbn: str, title: str, author: str, pages: int) -> bool:
         if isbn in self.books:
             return False
         else:
             new = Book(isbn, title, author, pages)
             self.books[isbn] = new
             return True
-    def search_by_isbn(self,isbn: str) -> Book | None:
-        if isbn in Book:
-            pass
+
+    def search_by_isbn(self, isbn: str) -> Book | None:
+        """if isbn in Book:
+            return isbn
         else:
-            return None
-    def add_note_to_book(self, isbn:str, text:str, page:int, date: datetime) -> bool:
-        if self.search_by_isbn(isbn) != Book:
+            return None"""
+        return self.books.get(isbn)
+
+    def add_note_to_book(self, isbn: str, text: str, page: int, date: datetime) -> bool:
+        book = self.search_by_isbn(isbn)
+        if not book:
             return False
+
+        return book.add_note(text, page, date)
+
