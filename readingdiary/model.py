@@ -71,15 +71,21 @@ class Book:
             #return max(set(pages), key=pages.count)
 
     def __str__(self) -> str:
-        if self.rating == 3:
+        """if self.rating == 3:
             self.rating = "excellent"
         elif self.rating == 2:
             self.rating = "good"
         elif self.rating == 1:
             self.rating = "bad"
         elif self.rating == -1:
-            self.rating = "unrated"
-        return f"ISBN: {self.isbn} Title: {self.title} Author: {self.author} Pages: {self.pages} Rating: {self.rating}"
+            self.rating = "unrated"""
+        dec = {3: "excellent",
+               2: "good",
+               1:"bad",
+               -1:"unrated"
+        }
+
+        return f"ISBN: {self.isbn}\n Title: {self.title}\n Author: {self.author}\n Pages: {self.pages}\n Rating: {dec[self.rating]}"
 
 
 class ReadingDiary:
