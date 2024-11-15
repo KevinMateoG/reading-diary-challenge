@@ -33,7 +33,7 @@ class Book:
         return True
 
     def set_rating(self, rating: int) -> bool:
-        if not rating in (Book.EXCELLENT, Book.GOOD, Book.BAD):
+        if rating not in (Book.EXCELLENT, Book.GOOD, Book.BAD):
             return False
         self.rating = rating
         return True
@@ -57,7 +57,7 @@ class ReadingDiary:
         self.books: dict[str, Book] = {}
 
     def add_book(self, isbn: str, title: str, author: str, pages: int) -> bool:
-        if not isbn in self.books:
+        if isbn not in self.books:
             return False
         self.books[isbn] = Book(isbn, title, author, pages)
         return True
@@ -79,5 +79,4 @@ class ReadingDiary:
         if book is None:
             return False
         return book.set_rating(rating)
-
 
